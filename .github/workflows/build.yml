@@ -21,10 +21,6 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
         cache: 'maven'
-    
-    - name: Set up Maven
-      run: |
-       export PATH=/usr/share/maven/bin:$PATH
 
     - name: Build project
-      run: ./mvn build
+      run: /usr/share/maven/bin/mvn build
