@@ -27,4 +27,4 @@ jobs:
         export PATH=/usr/share/maven/bin:$PATH
 
     - name: Build project
-      run: mvn build
+      run: mvn verify
