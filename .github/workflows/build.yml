@@ -3,7 +3,7 @@ name: Java CI
 on:
  push:
   branches:
-   - setting-up-pipelines
+   - '*'
 
 jobs:
  builds:
@@ -19,6 +19,11 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
         cache: 'gradle'
+    
+    - name: Install Gradle
+      uses: gradle/gradle-build-action@v2
+      with:
+        version: '6.8.3'
 
     - name: Build project
       run: ./gradlew build
