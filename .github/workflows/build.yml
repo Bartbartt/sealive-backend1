@@ -5,6 +5,14 @@ on:
   branches:
    - '*'
 
+protected-branches:
+ - pattern: main
+   require-status-checks:
+    - build sealive backend1
+ - pattern: dev
+   require-status-checks:
+    - build sealive backend1
+
 jobs:
  builds:
   runs-on: ubuntu-latest
