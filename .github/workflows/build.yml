@@ -5,7 +5,7 @@ on:
   branches:
    - '*'
 
-protected-branches:
+protected:
  - pattern: main
    require-status-checks:
     - build sealive backend1
