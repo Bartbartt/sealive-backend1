@@ -24,7 +24,7 @@ jobs:
 
     - name: Set up Maven
       run: |
-      export PATH=/usr/share/maven/bin:$PATH
+        export PATH=/usr/share/maven/bin:$PATH
 
     - name: Build project
       run: mvn build
