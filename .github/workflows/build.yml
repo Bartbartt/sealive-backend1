@@ -1,4 +1,4 @@
-name: Java CI
+name: build sealive backend1
 
 on:
  push:
