@@ -17,17 +17,6 @@ public class Account {
 
     public Account() {
     }
-    public Account(String username, String biography, LocalDate birthday) {
-        Username = username;
-        Biography = biography;
-        Birthday = birthday;
-    }
-    public Account(int id, String username, String biography, LocalDate birthday) {
-        Id = id;
-        Username = username;
-        Biography = biography;
-        Birthday = birthday;
-    }
 
     public int getId() {
         return Id;
@@ -43,5 +32,21 @@ public class Account {
 
     public void setUsername(String username) {
         Username = username;
+    }
+
+    public String getBiography() {
+        return Biography;
+    }
+
+    public void setBiography(String biography) {
+        Biography = biography;
+    }
+
+    public LocalDate getBirthday() {
+        return Birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        Birthday = birthday;
     }
 }
