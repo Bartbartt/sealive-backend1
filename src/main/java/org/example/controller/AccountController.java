@@ -24,6 +24,6 @@ public class AccountController {
     @GetMapping("getAll")
     public CompletableFuture<ResponseEntity<List<Account>>> getAll(){
         return accountService.getAll()
-                .thenApply(accounts -> ResponseEntity.ok(accounts));
+                .thenApply(ResponseEntity::ok);
     }
 }
