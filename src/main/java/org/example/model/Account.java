@@ -34,6 +34,7 @@ public class Account {
         Username = username;
     }
 
+
     public String getBiography() {
         return Biography;
     }

@@ -18,12 +18,21 @@ public class AccountController {
 
     @PostMapping("create")
     public CompletableFuture<ResponseEntity<Account>> create(@RequestBody Account account){
-        return accountService.create(account)
-                .thenApply(createdAccount -> new ResponseEntity<>(createdAccount, HttpStatus.CREATED));
+        try{
+            Thread.sleep(5000);
+            return accountService.create(account)
+                    .thenApply(createdAccount -> new ResponseEntity<>(createdAccount, HttpStatus.CREATED));
+        }
+        catch (Exception e){
+            return CompletableFuture.completedFuture(new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT));
+        }
     }
+
     @GetMapping("getAll")
     public CompletableFuture<ResponseEntity<List<Account>>> getAll(){
         return accountService.getAll()
                 .thenApply(ResponseEntity::ok);
     }
+
+
 }

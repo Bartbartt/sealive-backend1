@@ -16,6 +16,7 @@ public class Chatroom {
     @Column
     private LocalDateTime CreatedDateTime;
     @OneToOne(cascade = CascadeType.ALL)
+
     @JoinColumn(name = "accountId", referencedColumnName = "id")
     private Account CreatorAccount;
 
