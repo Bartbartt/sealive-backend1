@@ -1,36 +1,47 @@
-name: build sealive backend1
+name: Build and SonarQube Analysis
 
 on:
- push:
-  branches:
-   - '*'
+  push:
+    branches:
+      - '*'
 
 jobs:
- builds:
-  runs-on: ubuntu-latest
-  
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-       fetch-depth: 0
+  build:
+    runs-on: ubuntu-latest
 
-    - name: Set up JDK 11
-      uses: actions/setup-java@v2
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: 'maven'
+    services:
+      sonarqube:
+        image: sonarqube
+        ports:
+          - 9000:9000
+        options: >-
+          --health-cmd="curl -f http://localhost:9000/api/system/health || exit 1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
-    - name: Set up Maven
-      run: |
-        export PATH=/usr/share/maven/bin:$PATH
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-    - name: Build project
-      run: mvn verify
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
 
-    - name: SonarQube Scan
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Use the secret you added
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  
-      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=sealive-backend1-sqube -Dsonar.projectName='sealive backend1 sqube'
+      - name: Build project
+        run: mvn verify
+
+      - name: SonarQube Scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Use the secret you added
+          SONAR_HOST_URL: 'http://localhost:9000'  # Use localhost since it's running in the service
+        run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+          -Dsonar.projectKey=<your-sonarqube-project-key> \
+          -Dsonar.projectName='Your Project Name' \
+          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
