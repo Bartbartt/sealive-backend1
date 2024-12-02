@@ -32,7 +32,5 @@ jobs:
     - name: SonarQube Scan
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Use the secret you added
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        
-        
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=sealive-backend1-sqube -Dsonar.projectName='sealive backend1 sqube'
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  
+      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=sealive-backend1-sqube -Dsonar.projectName='sealive backend1 sqube'
