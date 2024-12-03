@@ -10,6 +10,20 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: sonar
+          POSTGRES_USER: sonar
+          POSTGRES_PASSWORD: sonar
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U sonar"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
       sonarqube:
         image: sonarqube
         ports:
@@ -19,7 +33,10 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
-          --memory=2g  # Increase memory limit  
+        env:
+          SONAR_JDBC_URL: jdbc:postgresql://postgres:5432/sonar
+          SONAR_JDBC_USERNAME: sonar
+          SONAR_JDBC_PASSWORD: sonar
 
     steps:
       - name: Checkout code
@@ -36,6 +53,18 @@ jobs:
 
       - name: Build project
         run: mvn verify
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          echo "Waiting for PostgreSQL to be ready..."
+          for i in {1..30}; do
+            if pg_isready -h localhost -p 5432 -U sonar; then
+              echo "PostgreSQL is ready!"
+              break
+            fi
+            echo "Waiting for PostgreSQL to be ready..."
+            sleep 10
+          done
 
       - name: Wait for SonarQube to be ready
         run: |
