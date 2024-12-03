@@ -95,6 +95,6 @@ jobs:
           SONAR_HOST_URL: 'http://localhost:9000'  # Use localhost since it's running in the service
         run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
           -Dsonar.projectKey=<your-sonarqube-project-key> \
-          -Dsonar.projectName='Your Project Name' \
+          -Dsonar.projectName='sealive github sonarqube check!!!' \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
