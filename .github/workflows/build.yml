@@ -36,6 +36,18 @@ jobs:
       - name: Build project
         run: mvn verify
 
+      - name: Wait for SonarQube to be ready
+        run: |
+          echo "Waiting for SonarQube to be ready..."
+          for i in {1..30}; do
+            if curl -s http://localhost:9000/api/system/health | grep -q '"status":"OK"'; then
+              echo "SonarQube is ready!"
+              break
+            fi
+            echo "Waiting for SonarQube to be ready..."
+            sleep 10
+          done
+
       - name: SonarQube Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Use the secret you added
