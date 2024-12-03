@@ -1,100 +1,39 @@
-name: Build and SonarQube Analysis
+name: Build
 
 on:
   push:
     branches:
-      - '*'
+      - dev
+
 
 jobs:
   build:
+    name: Build and analyze
     runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:latest
-        env:
-          POSTGRES_DB: sonar
-          POSTGRES_USER: sonar
-          POSTGRES_PASSWORD: sonar
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd="pg_isready -U sonar"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
-      sonarqube:
-        image: sonarqube:9.9-community
-        ports:
-          - 9000:9000
-        options: >-
-          --health-cmd="curl -f http://localhost:9000/api/system/health || exit 1"
-          --health-interval=15s
-          --health-timeout=10s
-          --health-retries=10
-          --memory=2g
-        env:
-          SONAR_JDBC_URL: jdbc:postgresql://postgres:5432/sonar
-          SONAR_JDBC_USERNAME: sonar
-          SONAR_JDBC_PASSWORD: sonar
-
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Set up JDK 17
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: 'maven'
-
-      - name: Build project
-        run: mvn verify
-
-      - name: Wait for PostgreSQL to be ready
-        run: |
-          echo "Waiting for PostgreSQL to be ready..."
-          for i in {1..30}; do
-            if pg_isready -h localhost -p 5432 -U sonar; then
-              echo "PostgreSQL is ready!"
-              break
-            fi
-            echo "Waiting for PostgreSQL to be ready..."
-            sleep 10
-          done
-
-      - name: Wait for SonarQube to be ready
-        run: |
-          echo "Waiting for SonarQube to be ready..."
-          for i in {1..30}; do
-            if curl -s http://localhost:9000/api/system/health | grep -q '"status":"OK"'; then
-              echo "SonarQube is ready!"
-              break
-            fi
-            echo "Waiting for SonarQube to be ready..."
-            sleep 10
-          done
-
-      - name: Get SonarQube logs
-        run: |
-          echo "Fetching SonarQube logs..."
-          CONTAINER_ID=$(docker ps -q --filter "ancestor=sonarqube:9.9-community")
-          if [ -n "$CONTAINER_ID" ]; then
-            docker logs $CONTAINER_ID
-          else
-            echo "SonarQube container not found."
-          fi   
-
-      - name: SonarQube Scan
+          java-version: 17
+          distribution: 'zulu' # Alternative distribution options are available.
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Build and analyze
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Use the secret you added
-          SONAR_HOST_URL: 'http://localhost:9000'  # Use localhost since it's running in the service
-        run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-          -Dsonar.projectKey=<your-sonarqube-project-key> \
-          -Dsonar.projectName='sealive github sonarqube check!!!' \
-          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=sealive-github-sonarqube-check- -Dsonar.projectName='sealive github sonarqube check!!!'
