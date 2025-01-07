@@ -1,9 +1,13 @@
 package org.example.model;
 import java.time.LocalDate;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table
+@Getter
+@Setter
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,36 +22,4 @@ public class Account {
     public Account() {
     }
 
-    public int getId() {
-        return Id;
-    }
-
-    public void setId(int id) {
-        Id = id;
-    }
-
-    public String getUsername() {
-        return Username;
-    }
-
-    public void setUsername(String username) {
-        Username = username;
-    }
-
-
-    public String getBiography() {
-        return Biography;
-    }
-
-    public void setBiography(String biography) {
-        Biography = biography;
-    }
-
-    public LocalDate getBirthday() {
-        return Birthday;
-    }
-
-    public void setBirthday(LocalDate birthday) {
-        Birthday = birthday;
-    }
 }
