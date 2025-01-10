@@ -25,14 +25,20 @@ public class Chatroom {
     @JoinColumn(name = "accountId", referencedColumnName = "id")
     private Account CreatorAccount;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "chatroom_seacreature",
+            joinColumns = @JoinColumn(name = "chatroom_id"),
+            inverseJoinColumns = @JoinColumn(name = "seacreature_id")
+
+    )
+    private Set<SeaCreature> seaCreatures = new HashSet<>();
+
     public Chatroom(){
     }
 
-    @ManyToMany
-    @JoinTable(
-            name = "chatroom_seaCreature",
-            joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id")
-    )
-    private Set<SeaCreature> seaCreatures = new HashSet<>();
+    public void addSeaCreature(SeaCreature seaCreature) {
+        seaCreatures.add(seaCreature);
+        seaCreature.getChatrooms().add(this);
+    }
 }

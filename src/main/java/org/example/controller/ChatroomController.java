@@ -1,5 +1,7 @@
 package org.example.controller;
+import jakarta.validation.Valid;
 import org.example.model.Chatroom;
+import org.example.model.SeaCreature;
 import org.example.service.ChatroomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +10,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -20,15 +23,13 @@ public class ChatroomController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    @PostMapping("create")
-    public CompletableFuture<ResponseEntity<Chatroom>> create(@RequestBody Chatroom chatroom) {
-        return chatroomService.create(chatroom)
-                .thenApply(createdChatroom -> {
-                    // Send the created chatroom to WebSocket subscribers
-                    messagingTemplate.convertAndSend("/topic/chatrooms", createdChatroom);
-                    return new ResponseEntity<>(createdChatroom, HttpStatus.CREATED);
-                });
+
+    @PostMapping("create2")
+    public CompletableFuture<ResponseEntity<Chatroom>> create2(@RequestBody Chatroom chatroom, @RequestParam(required = false) Set<Integer> seaCreatureIds) {
+        return chatroomService.createChatroomWithSeaCreatures(chatroom, seaCreatureIds)
+                .thenApply(createdChatroom -> new ResponseEntity<>(createdChatroom, HttpStatus.CREATED));
     }
+
 
     @GetMapping("getAll")
     public CompletableFuture<ResponseEntity<List<Chatroom>>> getAll() {

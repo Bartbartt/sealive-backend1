@@ -1,6 +1,7 @@
 package org.example.controller;
-import org.example.model.Account;
-import org.example.service.AccountService;
+
+import org.example.model.SeaCreature;
+import org.example.service.SeaCreatureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,17 +11,17 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-@RequestMapping("account")
-public class AccountController {
+@RequestMapping("seaCreature")
+public class SeaCreatureController {
 
     @Autowired
-    private AccountService accountService;
+    private SeaCreatureService seaCreatureService;
 
     @PostMapping("create")
-    public CompletableFuture<ResponseEntity<Account>> create(@RequestBody Account account){
+    public CompletableFuture<ResponseEntity<SeaCreature>> create(@RequestBody SeaCreature seaCreature){
         try{
-            return accountService.create(account)
-                    .thenApply(createdAccount -> new ResponseEntity<>(createdAccount, HttpStatus.CREATED));
+            return seaCreatureService.create(seaCreature)
+                    .thenApply(createdSeaCreature -> new ResponseEntity<>(createdSeaCreature, HttpStatus.CREATED));
         }
         catch (Exception e){
             return CompletableFuture.completedFuture(new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT));
@@ -28,8 +29,8 @@ public class AccountController {
     }
 
     @GetMapping("getAll")
-    public CompletableFuture<ResponseEntity<List<Account>>> getAll(){
-        return accountService.getAll()
+    public CompletableFuture<ResponseEntity<List<SeaCreature>>> getAll(){
+        return seaCreatureService.getAll()
                 .thenApply(ResponseEntity::ok);
     }
 
