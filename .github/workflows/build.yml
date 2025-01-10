@@ -37,4 +37,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: http://localhost:9000
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=my-project-key -Dsonar.projectName='MAAKT T WEL UIT WAT IK HIER STOP???'
+        run: run: mvn -B -X verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+  -Dsonar.projectKey=my-project-key \
+  -Dsonar.projectName='MAAKT T WEL UIT WAT IK HIER STOP???' \
+  -Dsonar.login=${{ secrets.SONAR_TOKEN }}
