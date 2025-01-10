@@ -1,24 +1,25 @@
 package org.example.model;
-import java.time.LocalDate;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table
 @Getter
 @Setter
-public class Account {
+public class SeaCreature {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int Id;
     @Column
-    private String Username;
-    @Column
-    private String Biography;
-    @Column
-    private LocalDate Birthday;
+    private String Name;
 
-    public Account() {}
+    public SeaCreature() {}
+
+    @ManyToMany(mappedBy="chatroom")
+    private Set<Chatroom> chatrooms = new HashSet<>();
 
 }

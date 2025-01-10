@@ -19,8 +19,7 @@ public class ChatroomService {
 
     @Async
     public CompletableFuture<Chatroom> create(Chatroom chatroom){
-
-        return CompletableFuture.supplyAsync(() -> chatroomRepository.save(chatroom));
+            return CompletableFuture.supplyAsync(() -> chatroomRepository.save(chatroom));
     }
 
     @Async

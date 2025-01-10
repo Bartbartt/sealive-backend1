@@ -1,8 +1,14 @@
 package org.example.model;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 @Table
 public class Chatroom {
@@ -15,15 +21,18 @@ public class Chatroom {
     private String Description;
     @Column
     private LocalDateTime CreatedDateTime;
-    @OneToOne(cascade = CascadeType.ALL)
-
+    @ManyToOne()
     @JoinColumn(name = "accountId", referencedColumnName = "id")
     private Account CreatorAccount;
 
-    public Chatroom(String title, String description, LocalDateTime createdDateTime, Account creatorAccount){
-        Title = title;
-        Description = description;
-        CreatedDateTime = createdDateTime;
-        CreatorAccount = creatorAccount;
+    public Chatroom(){
     }
+
+    @ManyToMany
+    @JoinTable(
+            name = "chatroom_seaCreature",
+            joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id")
+    )
+    private Set<SeaCreature> seaCreatures = new HashSet<>();
 }
