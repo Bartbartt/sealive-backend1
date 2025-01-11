@@ -7,12 +7,22 @@
     <groupId>org.example</groupId>
     <artifactId>Bluebottle</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>11</java.version>
+
+        <sonar.projectKey>sealive-github-sonarqube-check-</sonar.projectKey>
+        <sonar.projectName>sonarqubehell</sonar.projectName>
+        <sonar.projectVersion>1.0</sonar.projectVersion>
+        <sonar.sources>src/main/java</sonar.sources>
+        <sonar.tests>src/test/java</sonar.tests>
+        <sonar.java.binaries>target/classes</sonar.java.binaries>
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.token>sqp_356f2030233fd201b0b781861a15319b34be4622</sonar.token>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -95,10 +105,11 @@
             </plugin>
 
           <plugin>
-            <groupId>org.sonarsource.scanner.maven</groupId>
-            <artifactId>sonar-maven-plugin</artifactId>
-            <version>3.9.0.2155</version> <!-- Use the latest version -->
+              <groupId>org.sonarsource.scanner.maven</groupId>
+              <artifactId>sonar-maven-plugin</artifactId>
+            <version>3.9.1.2184</version> <!-- Use the latest version -->
           </plugin>
+
         </plugins>
     </build>
 </project>
