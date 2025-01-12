@@ -40,5 +40,5 @@ public class Chatroom {
     public void addSeaCreature(SeaCreature seaCreature) {
         seaCreatures.add(seaCreature);
         seaCreature.getChatrooms().add(this);
-    }
+    } 
 }
