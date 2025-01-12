@@ -19,7 +19,7 @@
         <sonar.projectName>sonarqubehell</sonar.projectName>
         <sonar.projectVersion>1.0</sonar.projectVersion>
         <sonar.sources>src/main/java</sonar.sources>
-        <sonar.tests>src/test/java</sonar.tests>
+        <!-- <sonar.tests>src/test/java</sonar.tests> -->
         <sonar.java.binaries>target/classes</sonar.java.binaries>
         <sonar.host.url>http://localhost:9000</sonar.host.url>
         <sonar.token>sqp_356f2030233fd201b0b781861a15319b34be4622</sonar.token>
