@@ -3,7 +3,7 @@ name: SonarQube Analysis
 on:
   push:
     branches:
-      - *  # Change to your default branch
+      - '*'  # Change to your default branch
 
 jobs:
   sonar:
