@@ -7,7 +7,7 @@ on:
 
 jobs:
   sonar:
-    runs-on: barts-swag-machine
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
