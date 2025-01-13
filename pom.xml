@@ -16,7 +16,7 @@
         <java.version>11</java.version>
 
         <sonar.projectKey>sealive-github-sonarqube-check-</sonar.projectKey>
-        <sonar.projectName>sonarqubehell</sonar.projectName>
+        <sonar.projectName>sonarqube-sealive</sonar.projectName>
         <sonar.projectVersion>1.0</sonar.projectVersion>
         <sonar.sources>src/main/java</sonar.sources>
         <!-- <sonar.tests>src/test/java</sonar.tests> -->
