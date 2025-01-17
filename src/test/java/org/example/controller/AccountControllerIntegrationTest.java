@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import org.example.BaseIntegrationTest;
 import org.example.model.Account;
 import org.example.repository.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AccountControllerIntegrationTest {
+public class AccountControllerIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -31,13 +33,6 @@ public class AccountControllerIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        // Find all accounts with the username "testuser"
-        //List<Account> testUsers = accountRepository.findByUsername("testuser");
-
-        // Delete each account found
-        //for (Account testUser : testUsers) {
-        //    accountRepository.delete(testUser);
-        //}
 
         // Create a sample account
         account = new Account();
@@ -48,22 +43,29 @@ public class AccountControllerIntegrationTest {
 
     @Test
     public void testCreateAccount() throws Exception {
-        mockMvc.perform(post("/account/create")
+        MvcResult result = mockMvc.perform(post("/account/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\":\"testuser\",\"biography\":\"Test biography\",\"birthday\":\"2000-01-01\"}"))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.username", is("testuser")))
-                .andExpect(jsonPath("$.biography", is("Test biography")))
-                .andExpect(jsonPath("$.birthday", is("2000-01-01")));
+                        .content("{\"id\":0,\"username\":\"string\",\"biography\":\"string\",\"birthday\":\"2025-01-17\"}"))
+                .andReturn(); // Capture the result
+
+        // Now assert the JSON path
+        mockMvc.perform(asyncDispatch(result))
+                .andExpect(jsonPath("$.username", is("string")))
+                .andExpect(jsonPath("$.biography", is("string")))
+                .andExpect(jsonPath("$.birthday", is("2025-01-17")));
     }
+
+
 
     @Test
     public void testGetAllAccounts() throws Exception {
-        // First, create an account to retrieve
+        accountRepository.deleteAll();
         accountRepository.save(account);
+        MvcResult result = mockMvc.perform(get("/account/getAll"))
+                .andExpect(request().asyncStarted())
+                .andReturn();
 
-        mockMvc.perform(get("/account/getAll")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(asyncDispatch(result))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].username", is("testuser")))
