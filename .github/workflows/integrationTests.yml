@@ -1,4 +1,4 @@
-name: Build
+name: Run unit tests
 
 on:
   push:
@@ -8,9 +8,19 @@ on:
 
 jobs:
   build:
-    name: Build and analyze, run Unit tests
+    name: run integration tests
     runs-on: ubuntu-latest
-    
+
+    services:
+      db:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+          POSTGRES_DB: testdb
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,5 +31,5 @@ jobs:
         with:
           java-version: 17
           distribution: 'zulu' # Alternative distribution options are available.
-      - name: Build and analyze & run unit tests
-        run: mvn test
+      - name: verify integration tests
+        run: mvn verify -DskipUnitTests=true
