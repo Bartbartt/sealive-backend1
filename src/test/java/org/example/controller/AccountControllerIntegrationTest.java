@@ -33,7 +33,7 @@ public class AccountControllerIntegrationTest extends BaseIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-
+        accountRepository.deleteAll();
         // Create a sample account
         account = new Account();
         account.setUsername("testuser");
@@ -59,7 +59,7 @@ public class AccountControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void testGetAllAccounts() throws Exception {
-        accountRepository.deleteAll();
+        //accountRepository.deleteAll();
         accountRepository.save(account);
         MvcResult result = mockMvc.perform(get("/account/getAll"))
                 .andExpect(request().asyncStarted())
