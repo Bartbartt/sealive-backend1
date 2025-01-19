@@ -21,8 +21,8 @@ public class Chatroom {
     private String Description;
     @Column
     private LocalDateTime CreatedDateTime;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "account_id", nullable = false, referencedColumnName = "id")
+    @ManyToOne()
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account CreatorAccount;
 
     @ManyToMany(fetch = FetchType.EAGER)

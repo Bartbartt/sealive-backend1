@@ -23,11 +23,19 @@ public class ChatroomController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-
     @PostMapping("create2")
     public CompletableFuture<ResponseEntity<Chatroom>> create2(@RequestBody Chatroom chatroom, @RequestParam(required = false) Set<Integer> seaCreatureIds) {
-        return chatroomService.createChatroomWithSeaCreatures(chatroom, seaCreatureIds)
-                .thenApply(createdChatroom -> new ResponseEntity<>(createdChatroom, HttpStatus.CREATED));
+        try{
+            return chatroomService.createChatroomWithSeaCreatures(chatroom, seaCreatureIds)
+                    .thenApply(createdChatroom -> {
+                        // Send the created chatroom to WebSocket subscribers
+                        messagingTemplate.convertAndSend("/topic/chatrooms", createdChatroom);
+                        return new ResponseEntity<>(createdChatroom, HttpStatus.CREATED);
+                    });
+        }
+        catch (Exception e){
+            return CompletableFuture.completedFuture(new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT));
+        }
     }
 
 
